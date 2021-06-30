@@ -1,0 +1,65 @@
+
+MDBoxLayout:
+    orientation: 'vertical'
+
+    MDToolbar:
+        id: toolbar
+        pos_hint: {'top': 1}
+        title: 'DarkMatter Real Estate'
+        md_bg_color: 0, .898, 1, 1
+        # app.theme_cls.accent_color
+
+
+
+    MDBottomNavigation:
+        panel_color: 0, .898, 1, 1
+        text_color_normal: 1, 1, 1, 1
+        text_color_active: .631, .533, .498, 1
+        active_font_size: sp(10)
+        inactive_font_size: sp(7)
+
+        MDBottomNavigationItem:
+            name: 'home'
+            text: 'Home'
+            icon: 'home-variant-outline'
+
+            MDLabel:
+                text: 'Home Screen'
+                halign: 'center'
+
+        MDBottomNavigationItem:
+            name: 'chat'
+            text: 'Chat'
+            icon: 'chat-outline'
+
+            MDLabel:
+                text: 'Chat Box'
+                halign: 'center'
+
+        MDBottomNavigationItem:
+            name: 'listing'
+            text: 'All Listing'
+            icon: 'format-list-bulleted-square'
+
+            MDLabel:
+                text: 'All real estate listing'
+                halign: 'center'
+
+        MDBottomNavigationItem:
+            name: 'notifications'
+            text: 'Notifications'
+            icon: 'bell-outline'
+
+            MDLabel:
+                text: 'Notifications'
+                halign: 'center'
+
+
+        MDBottomNavigationItem:
+            name: 'profile'
+            text: 'Profile'
+            icon: 'account-outline'
+
+            MDLabel:
+                text: 'Account Settings'
+                halign: 'center'
