@@ -3,6 +3,7 @@ from kivy.core.window import Window
 from kivymd.theming import ThemableBehavior
 from kivymd.uix.behaviors import RectangularRippleBehavior
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.screen import MDScreen
 from kivy.animation import Animation
 from kivy.clock import Clock
@@ -15,7 +16,7 @@ from kivymd.uix.behaviors import CircularRippleBehavior
 from kivy.uix.image import Image
 
 
-# Window.size = (365, 600)
+Window.size = (365, 600)
 
 
 # ============ Screens ===============
@@ -208,12 +209,14 @@ class PropertyListItem(ThemableBehavior, MDBoxLayout):
     prop_location = StringProperty()
     prop_price = StringProperty()
     prop_image = StringProperty()
-    prop_auction_type = StringProperty()
     prop_views = StringProperty()
+    prop_auction_type = StringProperty()
+    auc_color = StringProperty()
 
-class DetailButton(CircularRippleBehavior, ButtonBehavior):
-    description = StringProperty()
-    _root = ObjectProperty()
+class FloatingButton(RectangularRippleBehavior, ButtonBehavior, MDFloatLayout):
+    pass
+
+# class PropertyImage(FitImage, ):
 
 class DMRE(MDApp):
     # def build(self):
@@ -231,7 +234,7 @@ class DMRE(MDApp):
 
 
         # Add Properties to Page
-        properties = [["Dallas, United States", "876 restaurants", "0.jpg", "30000", "Rent", "100"], ["Cordoba, Argentina", "124 restaurants", "1.jpg", "30000", "Rent", "100"], ["Portland, United States", "495 restaurants", "2.jpg", "30000", "Rent", "100"], ["Paris, France", "683 restaurants", "3.jpg", "30000", "Rent", "100"], ["Seoul, South Korea", "782 restaurants", "0.jpg", "30000", "Rent", "100"], ["Seattle, United States", "123 restaurants", "1.jpg", "30000", "Rent", "100"], ["Nashville, United States", "556 restaurants", "2.jpg", "30000", "Rent", "100"], ["Atlanta, United States", "456 restaurants", "3.jpg", "30000", "Rent", "100"]]
+        properties = [["Dallas, United States", "876 restaurants", "0.jpg", "30000", "Rent", "100"], ["Cordoba, Argentina", "124 restaurants", "1.jpg", "30000", "Rent", "100"], ["Portland, United States", "495 restaurants", "2.jpg", "30000", "Sale", "100"], ["Paris, France", "683 restaurants", "3.jpg", "30000", "Sale", "100"], ["Seoul, South Korea", "782 restaurants", "0.jpg", "30000", "Rent", "100"], ["Seattle, United States", "123 restaurants", "1.jpg", "30000", "Rent", "100"], ["Nashville, United States", "556 restaurants", "2.jpg", "30000", "Rent", "100"], ["Atlanta, United States", "456 restaurants", "3.jpg", "30000", "Sale", "100"]]
 
         properties_screen = self.root.ids.root_screen.ids.real_estate_items
         print(properties_screen)
@@ -243,6 +246,11 @@ class DMRE(MDApp):
             prop_image = i[2]
             prop_auction_type = i[4]
             prop_views = i[5]
+            auc_color = ""
+            if(prop_auction_type == "Rent"):
+                auc_color = "#f57e71"
+            else:
+                auc_color = "#71f5bc"
 
             properties_screen.add_widget(
                 PropertyListItem(
@@ -251,7 +259,8 @@ class DMRE(MDApp):
                     prop_price = f"XAF {prop_price}",
                     prop_image = prop_image,
                     prop_auction_type = prop_auction_type,
-                    prop_views = prop_views
+                    prop_views = prop_views,
+                    auc_color = auc_color
                     )
             )
 

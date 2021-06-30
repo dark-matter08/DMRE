@@ -1,37 +1,13 @@
-from kivy.lang import Builder
-from kivymd.app import MDApp
-
-KV = """
-<MyTile@SmartTileWithStar>
+MDFloatLayout:
+    size_hint_x: None
     size_hint_y: None
-    height: "240dp"
-
-
-ScrollView:
-
-    MDGridLayout:
-        cols: 3
-        adaptive_height: True
-        padding: dp(4), dp(4)
-        spacing: dp(4)
-
-        MyTile:
-            stars: 5
-            source: "1.jpg" # put your source
-
-        MyTile:
-            stars: 5
-            source: "2.jpg" # put your source
-
-        MyTile:
-            stars: 5
-            source: "3.jpg" # put your source
-"""
-
-
-class Example(MDApp):
-    def build(self):
-        return Builder.load_string(KV)
-
-
-Example().run()
+    size: (dp(110), dp(100))
+    # pos_hint: {"center_x": .3, "center_y":.7}
+    adaptive_height: True
+    canvas:
+        Color:
+            # rgba: gch(root.auc_color)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(3),]

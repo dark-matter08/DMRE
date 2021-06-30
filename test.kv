@@ -4,8 +4,31 @@
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
 #:import gch kivy.utils.get_color_from_hex
 #:import Animation kivy.animation.Animation
-# <DetailsButton>:
 
+<FloatingButton>:
+    size_hint_x: None
+    size_hint_y: None
+    height: "40dp"
+    width: "80dp"
+
+    adaptive_height: True
+    canvas:
+        Color:
+            rgba: 67/255, 204/255, 250/255, .6
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(3),]
+
+    MDLabel:
+        text: "Details"
+        pos_hint: {"center_x": .73, "center_y": .5}
+        font_style: "Caption"
+
+    MDIconButton:
+        icon: "chevron-right"
+        pos_hint : {"center_x": .75, "center_y": .5}
+        user_font_size: "14sp"
 
 <PropertyListItem>
     size_hint_y: None
@@ -20,20 +43,41 @@
         Line:
             points: (root.x+dp(16), root.y, root.x+self.width-dp(16)-0, root.y)
 
-    MDBoxLayout:
+    MDFloatLayout:
         adaptive_size: True
-        pos_hint: {"center_x": .5, "center_y": .5}
+        orientation: "vertical"
+        # pos_hint: {"center_x": .5, "center_y": .5}
 
         FitImage:
             source: root.prop_image
             size_hint: (None, None)
             size: (dp(110), dp(100))
+            pos_hint: {"center_x": .5, "center_y": .5}
             radius: [dp(7),]
 
-        # MDLabel:
-        #     text: root.prop_auction_type
-        #     font_style: "Caption"
-        #     pos_hint: {"center_x": .5, "center_y": .9}
+        MDFloatLayout:
+            size_hint_x: None
+            size_hint_y: None
+            height: "20dp"
+            width: "45dp"
+            pos_hint: {"center_x": .23, "center_y":.87}
+            adaptive_height: True
+
+            canvas:
+                Color:
+                    rgba: gch(root.auc_color)
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(3),]
+
+            MDLabel:
+                text: root.prop_auction_type
+                pos_hint: {"center_x": .7, "center_y": .5}
+                font_style: "Caption"
+
+
+
 
     MDBoxLayout:
         orientation: "vertical"
@@ -59,10 +103,12 @@
             adaptive_height: True
 
     MDBoxLayout:
+        size_hint_x: None
         orientation: "vertical"
-        padding: "10dp"
-        adaptive_height: True
-        spacing: dp(30)
+        width: "80dp"
+        padding: [0, dp(10), dp(25), dp(10)]
+        # adaptive_height: True
+        spacing: dp(32)
 
         # adaptive_size: True
         # pos_hint: {"center_x": .6}
@@ -76,7 +122,7 @@
 
             canvas:
                 Color:
-                    rgba: 121/255, 134/255, 203/255, .6
+                    rgba: 67/255, 204/255, 250/255, .6
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
@@ -92,36 +138,15 @@
                 pos_hint: {"center_x": .9, "center_y": .5}
                 font_style: "Caption"
 
-        DetailButton:
-            size_hint_x: None
-            size_hint_y: None
-            height: "40dp"
-            width: "80dp"
-            pos_hint: {"center_x": .85}
-            adaptive_height: True
-            canvas:
-                Color:
-                    rgba: 121/255, 134/255, 203/255, .6
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [dp(3),]
 
+        FloatingButton:
+            id : details_button
+            pos_hint_y: .2
             on_release:
                 print("Clicked Details")
 
-            MDLabel:
-                text: "Details"
-                pos_hint: {"center_x": .2, "center_y": .5}
-                font_style: "Caption"
-
-            MDIconButton:
-                icon: "chevron-right"
-                pos_hint : {"center_x": .9, "center_y": .5}
-                user_font_size: "14sp"
-
 <DMREToolbar>
-    md_bg_color: gch("#7986cb")
+    md_bg_color: gch("#43ccfa")
     # adaptive_height: True
     size_hint_y: None
     height: "50dp"
@@ -208,14 +233,15 @@
 <NavigationBar>:
     size_hint: (None, None)
     height: dp(65)
-    md_bg_color: gch("#7986cb")
+    md_bg_color: gch("#43ccfa")
 
 
-    BoxLayout:
+    MDBoxLayout:
         id: _button_box
+        md_bg_color: gch("#43ccfa")
 
 <RootScreen>
-    # md_bg_color: gch("#fffefe")
+    md_bg_color: gch("#f2f0f7")
 
     MDBoxLayout:
         id : root_screen_layout
@@ -255,7 +281,7 @@
                 MDBoxLayout:
                     canvas.before:
                         Color:
-                            rgba: gch("#fffefe")
+                            rgba: gch("#f2f0f7")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -362,89 +388,10 @@
     bar_width: 0
     effect_cls: StiffScrollEffect
 
-<RallyLabel@MDLabel>
-    adaptive_height: True
-
-<RallyListItem>
-    size_hint_y: None
-    height: dp(60)
-
-    canvas:
-        Color:
-            rgba:
-                self.theme_cls.divider_color
-        Line:
-            points: (root.x+dp(16), root.y, root.x+self.width-dp(16)-0, root.y)
-    canvas.before:
-        Color:
-            rgba: gch("#31313b")
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
-    MDBoxLayout:
-        adaptive_size: True
-        padding: dp(15)
-        pos_hint: {"center_x": .5, "center_y": .5}
-
-        MDIcon:
-            icon: "minus-thick"
-            halign: "center"
-            pos_hint: {"center_y": .5}
-            theme_text_color: "Custom"
-            text_color: root.bar_color
-
-            canvas.before:
-                PushMatrix
-                Rotate:
-                    angle: 90
-                    origin: self.center
-            canvas.after:
-                PopMatrix
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        adaptive_height: True
-        pos_hint: {"center_x": .5, "center_y": .5}
-        spacing: dp(2)
-
-        RallyLabel:
-            text: root.text
-            font_style: "Subtitle1"
-
-        RallyLabel:
-            text: root.secondary_text
-            theme_text_color: "Hint"
-            font_style: "Button"
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        padding: (0, 0, 0, dp(10))
-        adaptive_height: True
-
-        RallyLabel:
-            text: root.tertiary_text
-            theme_text_color: "Secondary"
-            pos_hint: {"center_x": .5, "center_y": .5}
-            halign: "right"
-            font_style: "H3"
-            font_size: sp(20)
-
-    MDBoxLayout:
-        adaptive_size: True
-        padding: dp(15)
-        pos_hint: {"center_x": .5, "center_y": .5}
-
-        MDIcon:
-            icon: "chevron-right"
-            halign: "center"
-            pos_hint: {"center_y": .5}
-            theme_text_color: "Hint"
-
 <RegisterScreen>
     canvas:
         Color:
-            rgba: gch("fffefe")
+            rgba: gch("f2f0f7")
         Rectangle:
             pos: self.pos
             size: self.size
