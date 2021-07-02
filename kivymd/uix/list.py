@@ -703,8 +703,7 @@ class MDList(MDGridLayout):
 
 
 class BaseListItem(
-    ThemableBehavior, RectangularRippleBehavior, ButtonBehavior, FloatLayout
-):
+    ThemableBehavior, RectangularRippleBehavior, ButtonBehavior, FloatLayout):
     """
     Base class to all ListItems. Not supposed to be instantiated on its own.
     """
