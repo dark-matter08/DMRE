@@ -1,6 +1,7 @@
 from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivymd.theming import ThemableBehavior
+from kivy.uix.behaviors.touchripple import TouchRippleBehavior
 from kivymd.uix.behaviors import RectangularRippleBehavior
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
@@ -9,11 +10,13 @@ from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.metrics import dp
-from kivy.properties import ColorProperty, NumericProperty, StringProperty, ObjectProperty
+from kivy.properties import ColorProperty, NumericProperty, StringProperty, ObjectProperty, BooleanProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors import CircularRippleBehavior
 from kivy.uix.image import Image
+from kivymd.uix.textfield import MDTextField
+from functools import partial
 import db
 import json
 
@@ -28,6 +31,42 @@ class RootScreen(MDScreen):
 
 class RegisterScreen(MDScreen):
     pass
+
+class LoginScreen(MDScreen):
+    scale_house_small = NumericProperty(1)
+    lbl_h1_y = NumericProperty(50)
+    lbl_login_y = NumericProperty(70)
+    login_field_y = NumericProperty(90)
+    login_password_y = NumericProperty(110)
+    btn_login_y = NumericProperty(130)
+    state = False
+
+    def anime_house_small(self):
+        anim = (
+            Animation(scale_house_small = 0.8, d=0.8)
+            + Animation(scale_house_small = 1, d=0.8)
+        )
+        anim.repeat = True
+        anim.start(self)
+
+    def anime_rest_screen(self):
+        Animation(y = dp(350), d=0.8, t="in_out_cubic").start(self.ids.house_big)
+        Animation(
+            lbl_h1_y = 0,
+            lbl_login_y = 0,
+            login_field_y = 0,
+            login_password_y = 0,
+            btn_login_y = 0,
+            d=1.2,
+            t="in_out_cubic"
+        ).start(self)
+        Animation(opacity = 1, d=0.8).start(self.ids.lbl_h1)
+        Animation(opacity = 1, d=0.8).start(self.ids.lbl_login)
+        Animation(opacity = 1, d=0.8).start(self.ids.login_field)
+        Animation(opacity = 1, d=0.8).start(self.ids.login_password)
+        Animation(opacity = 1, d=0.8).start(self.ids.btn_login)
+        Animation(opacity = 1, d=0.8).start(self.ids.lbl_register)
+        self.state = True
 
 class SettingScreen(MDScreen):
     pass
@@ -189,15 +228,6 @@ class NavigationBar(ThemableBehavior, BoxLayout):
         else:
             return super().add_widget(widget, index=(index), canvas=canvas)
 
-class RallyListItem(ThemableBehavior, RectangularRippleBehavior, MDBoxLayout):
-    text = StringProperty()
-    secondary_text = StringProperty()
-    tertiary_text = StringProperty()
-    bar_color = ColorProperty((1, 0, 0, 1))
-
-class RallySeeAllButton(RectangularRippleBehavior, MDBoxLayout):
-    pass
-
 # ==================================================================
 
 class PreviousImage(CircularRippleBehavior, ButtonBehavior, Image):
@@ -218,7 +248,59 @@ class PropertyListItem(ThemableBehavior, MDBoxLayout):
 class FloatingButton(RectangularRippleBehavior, ButtonBehavior, MDFloatLayout):
     pass
 
-# class PropertyImage(FitImage, ):
+# ============================ Forms ===============================
+class FormButton(RectangularRippleBehavior, ButtonBehavior, MDFloatLayout):
+    text = StringProperty()
+    icon = StringProperty()
+
+class PasswordField(TouchRippleBehavior, MDTextField):
+    password_mode = BooleanProperty(True)
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            touch.grab(self)
+            self.ripple_duration_in = 0.9
+            self.ripple_scale = 0.4
+            self.ripple_show(touch)
+            if self.icon_right:
+                # icon position based on the KV code for MDTextField
+                icon_x = (self.width + self.x) - (self._lbl_icon_right.texture_size[1]) - dp(8)
+                icon_y = self.center[1] - self._lbl_icon_right.texture_size[1] / 2
+                if self.mode == "rectangle":
+                    icon_y -= dp(4)
+                elif self.mode != 'fill':
+                    icon_y += dp(8)
+
+                # not a complete bounding box test, but should be sufficient
+                if touch.pos[0] > icon_x and touch.pos[1] > icon_y:
+                    if self.password_mode:
+                        self.icon_right = 'eye'
+                        self.password_mode = False
+                        self.password = self.password_mode
+                    else:
+                        self.icon_right = 'eye-off'
+                        self.password_mode = True
+                        self.password = self.password_mode
+
+
+                    # try to adjust cursor position
+                    cursor = self.cursor
+                    self.cursor = (0,0)
+
+                    Clock.schedule_once(partial(self.set_cursor, cursor))
+
+        return super(PasswordField, self).on_touch_down(touch)
+
+    def on_touch_up(self, touch):
+        if touch.grab_current is self:
+            touch.ungrab(self)
+            self.ripple_duration_out = 0.4
+            self.ripple_fade()
+            return True
+        return False
+
+    def set_cursor(self, pos, dt):
+        self.cursor = pos
 
 class DMRE(MDApp):
     # def build(self):
@@ -238,12 +320,12 @@ class DMRE(MDApp):
         # ============== Check if there is any active session ==================
         with open("session.txt", "r+") as file:
             content = file.read()
-            print(content)
+            print(f"--------{content}-------")
             if content == "":
-                self.root.current = "rally register screen"
+                self.root.current = "login_screen"
             else:
                 print(self.root)
-                self.root.current = "rally root screen"
+                self.root.current = "root_screen"
         # ======================================================================
         # ================== Get all properties on app starting ================
         self.get_app_properties(cur, con)

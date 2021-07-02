@@ -4,7 +4,8 @@
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
 #:import gch kivy.utils.get_color_from_hex
 #:import Animation kivy.animation.Animation
-
+#:import STANDARD_INCREMENT kivymd.material_resources.STANDARD_INCREMENT
+#:import ghc kivy.utils.get_hex_from_color
 <FloatingButton>:
     size_hint_x: None
     size_hint_y: None
@@ -29,6 +30,29 @@
         icon: "chevron-right"
         pos_hint : {"center_x": .75, "center_y": .5}
         user_font_size: "14sp"
+
+<FormButton>:
+    adaptive_height: True
+    canvas:
+        Color:
+            rgba: gch("#43ccfa")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(5),]
+
+    MDLabel:
+        text: root.text
+        x: root.width/2 + dp(10)
+        pos_hint:{"center_y":.5}
+        font_style: "H6"
+        bold: True
+        markup: True
+
+    # MDIconButton:
+    #     icon: root.icon
+    #     pos_hint : {"center_x": .75, "center_y": .5}
+    #     user_font_size: "16sp"
 
 <PropertyListItem>
     size_hint_y: None
@@ -77,9 +101,6 @@
                 pos_hint: {"center_x": .77, "center_y": .5}
                 font_style: "Caption"
 
-
-
-
     MDBoxLayout:
         orientation: "vertical"
         adaptive_height: True
@@ -90,6 +111,8 @@
             text: root.prop_title
             font_style: "Subtitle1"
             adaptive_height: True
+            shorten: True
+            shorten_from: 'right'
 
         MDLabel:
             text: root.prop_location
@@ -201,7 +224,7 @@
             root.scr_manager.current = "Settings"
             app.call_from_nav_item("set_all_inactive")
 
-            # app.root.current = "rally register screen" ==== for logout
+            # app.root.current = "register_screen" ==== for logout
 
 <NavigationItem>
     size_hint: None, None
@@ -242,7 +265,7 @@
         md_bg_color: gch("#43ccfa")
 
 <RootScreen>
-    md_bg_color: gch("#f2f0f7")
+    md_bg_color: gch("#e4f5fb")
 
     MDBoxLayout:
         id : root_screen_layout
@@ -282,7 +305,7 @@
                 MDBoxLayout:
                     canvas.before:
                         Color:
-                            rgba: gch("#f2f0f7")
+                            rgba: gch("#e4f5fb")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -394,59 +417,174 @@
     bar_width: 0
     effect_cls: StiffScrollEffect
 
-<RegisterScreen>
-    canvas:
-        Color:
-            rgba: gch("f2f0f7")
-        Rectangle:
-            pos: self.pos
-            size: self.size
+<LoginScreen>
+    on_enter:
+        if not root.state: root.anime_house_small(); \
+        root.anime_rest_screen()
+
+    FitImage:
+        id: house_big
+        source: "house_bg.png"
+        size_hint: None, None
+        size: root.width + dp(50), root.height - dp(100)
+        pos_hint: {"center_x":.5}
+        allow_stretch: True
+        keep_ratio: False
+        y: dp(450)
 
     MDBoxLayout:
-        adaptive_height: True
+        id: box
+        adaptive_size: True
         orientation: "vertical"
-        spacing: dp(80)
-        padding: dp(30)
         pos_hint: {"center_x": .5}
+        y: house_big.y + self.height + STANDARD_INCREMENT
 
-        Image:
-            source: "logo.png"
-            pos_hint: {"center_x": .5}
-            size_hint: None, None
+        MDLabel:
+            text: "DarkMatter"
+            adaptive_size: True
+            font_style: "H4"
+            bold: True
+            opposite_colors: True
 
-        MDBoxLayout:
+        MDLabel:
+            text: "Real Estate"
             adaptive_height: True
-            orientation: "vertical"
-            spacing: dp(20)
+            font_style: "Button"
+            bold: True
+            opposite_colors: True
+            halign: "right"
 
-            RallyTextField:
-                hint_text: "Username"
+    FitImage:
+        id: house_small
+        source: "house_bg_tophat.png"
+        size_hint: None, None
+        size: STANDARD_INCREMENT, STANDARD_INCREMENT
+        x: box.x
+        y: box.y + self.height - dp(14)
 
-            RallyTextField:
-                hint_text: "Password"
-                password: True
-                password_mask: "•"
+        canvas.before:
+            PushMatrix
+            Scale:
+                x: root.scale_house_small
+                y: root.scale_house_small
+                z: root.scale_house_small
+                origin: self.center
+        canvas.after:
+            PopMatrix
 
-        MDBoxLayout:
-            adaptive_height: True
-            orientation: "vertical"
-            spacing: dp(20)
+    MDLabel:
+        id: lbl_h1
+        opacity: 0
+        text: f"[font=Safira]Welcome[/font]"
+        font_style: "H4"
+        markup: True
+        bold: True
+        adaptive_height: True
+        halign: "center"
+        y: house_big.y - self.height + dp(30) - root.lbl_h1_y
 
-            MDIconButton:
-                icon: 'fingerprint'
-                pos_hint: {"center_x": .5}
-                user_font_size: dp(62)
-                _no_ripple_effect: True
-                on_release: root.parent.current = "rally root screen"
+    MDLabel:
+        id: lbl_login
+        opacity: 0
+        text: f"[font=Arial]Login to browse our vast collection[/font]"
+        font_style: "Caption"
+        markup: True
+        adaptive_height: True
+        halign: "center"
+        bold: True
+        color: app.theme_cls.disabled_hint_text_color
+        y: house_big.y - self.height - lbl_h1.height + dp(25) - root.lbl_login_y
 
-            MDTextButton:
-                text: "Or Login with Touch ID"
-                pos_hint: {"center_x": .5}
+    MDTextField:
+        id: login_field
+        opacity: 0
+        mode: "fill"
+        fill_color: 67/255,204/255,250/255, .2
+        pos_hint: {"center_x": .5}
+        hint_text: "Username or Email"
+        icon_right: "account"
+        icon_right_color: gch("#43ccfa")
+        required: True
+        helper_text_mode: "on_error"
+        helper_text: "This field cannot be left empty"
+        line_color_focus: gch("#43ccfa")
+        size_hint_x: .8
+        y:
+            house_big.y \
+            - self.height \
+            - lbl_h1.height \
+            - lbl_login.height \
+            - root.login_field_y \
+            - dp(5)
 
-<RallyTextField@MDTextField>
-    mode: 'fill'
-    line_anim: False
-    fill_color: (0, 0, 0, .4)
+    PasswordField:
+        id: login_password
+        opacity: 0
+        mode: "fill"
+        fill_color: 67/255,204/255,250/255, .2
+        pos_hint: {"center_x": .5}
+        hint_text: "Password"
+        icon_right: "eye-off"
+        icon_right_color: gch("#43ccfa")
+        required: True
+        password: True
+        helper_text_mode: "on_error"
+        helper_text: "This field cannot be left empty"
+        line_color_focus: gch("#43ccfa")
+        size_hint_x: .8
+        y:
+            house_big.y \
+            - self.height \
+            - lbl_h1.height \
+            - lbl_login.height \
+            - login_field.height \
+            - root.login_password_y \
+            - dp(20)
+        on_double_tap:
+            login_password.password = False if login_password.password == True else True
+            login_password.icon_right = "eye-off" if login_password.password == True else "eye"
+
+    FormButton:
+        id : btn_login
+        opacity: 0
+        text : f"[font=Safira]LOGIN[/font]"
+        icon : "login"
+        size_hint: None, None
+        pos_hint: {"center_x":.5}
+        -width: login_password.width
+        -height: login_password.height - dp(15)
+        y:
+            house_big.y \
+            - self.height \
+            - lbl_h1.height \
+            - lbl_login.height \
+            - login_field.height \
+            - login_password.height \
+            - root.btn_login_y \
+            - dp(40)
+        on_release:
+            print("Logging in...")
+
+    MDLabel:
+        id: lbl_register
+        opacity: 0
+        markup: True
+        old: True
+        y: dp(15)
+        adaptive_height: True
+        halign: "center"
+        text:
+            "[color={}]New user?[/color] Register Now".format(\
+            ghc(app.theme_cls.disabled_hint_text_color))
+
+<RegisterScreen>
+    MDLabel:
+        text:"Registration Screen"
+        halign:"center"
+        font_style:"H4"
+
+
+
 
 ScreenManager:
     id: screen_manager
@@ -454,8 +592,12 @@ ScreenManager:
 
     RegisterScreen:
         id : register_screen
-        name: "rally register screen"
+        name: "register_screen"
+
+    LoginScreen:
+        id : login_screen
+        name: "login_screen"
 
     RootScreen:
         id : root_screen
-        name: "rally root screen"
+        name: "root_screen"
