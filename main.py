@@ -30,7 +30,14 @@ class RootScreen(MDScreen):
     pass
 
 class RegisterScreen(MDScreen):
-    pass
+    def next(self):
+        app = MDApp.get_running_app()
+        self.ids.slide.load_next(mode="next")
+        self.ids.name.text_color = app.theme_cls.primary_color
+
+
+    def previous(self):
+        self.ids.slide.load_previous()
 
 class LoginScreen(MDScreen):
     scale_house_small = NumericProperty(1)
@@ -322,13 +329,18 @@ class DMRE(MDApp):
             content = file.read()
             print(f"--------{content}-------")
             if content == "":
-                self.root.current = "login_screen"
+                self.root.current = "register_screen"
             else:
                 print(self.root)
                 self.root.current = "root_screen"
         # ======================================================================
         # ================== Get all properties on app starting ================
-        self.get_app_properties(cur, con)
+        if(con):
+            print("True")
+            self.get_app_properties(cur, con)
+        else:
+            print("false")
+
         # ======================================================================
 
     def call_from_nav_item(self, for_item):
@@ -358,6 +370,7 @@ class DMRE(MDApp):
                 properties = json.loads(properties)
                 print("============ Checking for new data from DB ================")
                 db_count = db.get_properties_count(cur, con)
+                db_count = int(db_count)
                 json_count = len(properties)
                 print(f"=== db_count: {db_count} & json_count: {json_count}===")
 
