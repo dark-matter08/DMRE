@@ -580,7 +580,7 @@
 <RegisterScreen>
     MDFloatLayout:
         MDCard:
-            size_hint: .8, .7
+            size_hint: .8, .65
             pos_hint: {"center_x": .5, "center_y": .5}
             Carousel:
                 id: slide
@@ -617,7 +617,7 @@
                         text: "NEXT"
                         size_hint_x: .39
                         pos_hint: {"center_x": .7, "center_y": .2}
-                        on_release: root.next()
+                        on_release: root.next1()
 
                 MDFloatLayout:
                     MDTextField:
@@ -634,20 +634,22 @@
                         text: "PREVIOUS"
                         size_hint_x: .39
                         pos_hint: {"center_x": .3, "center_y": .2}
-                        on_release: root.previous()
+                        on_release: root.previous1()
                     MDRaisedButton:
                         text: "SUBMIT"
                         size_hint_x: .39
                         pos_hint: {"center_x": .7, "center_y": .2}
 
         MDLabel:
+            id: register_label
             text: f"[font=Safira]Register[/font]"
             font_style: "H4"
             markup: True
             bold: True
             # adaptive_height: True
             halign: "center"
-            y: dp(175)
+            y: dp(165)
+            # pos_hint_y: {"center_x": .5, "center_y": .945}
         MDLabel:
             id: name
             text: "Name"
@@ -655,34 +657,45 @@
             font_style: "H6"
             theme_text_color: "Custom"
         MDIconButton:
+            id: name_icon
             icon: "numeric-1-circle"
             pos_hint: {"center_x": .24, "center_y": .65}
             user_font_size: "35sp"
+            theme_text_color: "Custom"
         MDProgressBar:
-            size_hint_x: .22
-            pos_hint: {"center_x": .348, "center_y": .65}
+            id: progress
+            size_hint_x: .16
+            pos_hint: {"center_x": .37, "center_y": .65}
 
         MDLabel:
             id: contact
             text: "Contact"
             pos_hint: {"center_x": .902, "center_y": .7}
             font_style: "H6"
+            theme_text_color: "Custom"
         MDIconButton:
+            id: contact_icon
             icon: "numeric-2-circle"
             pos_hint: {"center_x": .5, "center_y": .65}
             user_font_size: "35sp"
+            theme_text_color: "Custom"
         MDProgressBar:
-            size_hint_x: .22
-            pos_hint: {"center_x": .608, "center_y": .65}
+            id: progress1
+            size_hint_x: .16
+            pos_hint: {"center_x": .63, "center_y": .65}
 
         MDLabel:
+            id: submit
             text: "Submit"
             pos_hint: {"center_x": 1.16, "center_y": .7}
             font_style: "H6"
+            theme_text_color: "Custom"
         MDIconButton:
+            id: submit_icon
             icon: "numeric-3-circle"
             pos_hint: {"center_x": .76, "center_y": .65}
             user_font_size: "35sp"
+            theme_text_color: "Custom"
 
 
 

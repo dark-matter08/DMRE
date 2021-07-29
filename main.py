@@ -34,10 +34,33 @@ class RegisterScreen(MDScreen):
         app = MDApp.get_running_app()
         self.ids.slide.load_next(mode="next")
         self.ids.name.text_color = app.theme_cls.primary_color
+        self.ids.progress.value = 100
+        self.ids.name_icon.text_color = app.theme_cls.primary_color
+        self.ids.name_icon.icon = "check-decagram"
+
+    def next1(self):
+        app = MDApp.get_running_app()
+        self.ids.slide.load_next(mode="next")
+        self.ids.contact.text_color = app.theme_cls.primary_color
+        self.ids.progress1.value = 100
+        self.ids.contact_icon.text_color = app.theme_cls.primary_color
+        self.ids.contact_icon.icon = "check-decagram"
+
 
 
     def previous(self):
         self.ids.slide.load_previous()
+        self.ids.name.text_color = 0, 0, 0, 1
+        self.ids.progress.value = 0
+        self.ids.name_icon.icon = "numeric-1-circle"
+        self.ids.name_icon.text_color = 0, 0, 0, 1
+
+    def previous1(self):
+        self.ids.slide.load_previous()
+        self.ids.contact.text_color = 0, 0, 0, 1
+        self.ids.progress1.value = 0
+        self.ids.contact_icon.icon = "numeric-2-circle"
+        self.ids.contact_icon.text_color = 0, 0, 0, 1
 
 class LoginScreen(MDScreen):
     scale_house_small = NumericProperty(1)
